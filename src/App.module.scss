@@ -1,0 +1,508 @@
+// テーマA
+.themeA {
+  --accent: #3282B8;
+  --addbtn-shadow: rgba(27, 27, 27, 0.06);
+  --btn-active: #1B262C;
+  --btn-bg: #68afdf;
+  --btn-hover: #0F4C75;
+  --btn-shadow: #0F4C75;
+  --btn-text: #fff;
+  --delete-icon-color: #f87a6c;
+  --delete-icon-hover: #b71c1c;
+  --done-icon-color: #97d89a;
+  --input-background-focus: #BBE1FA;
+  --input-bg: #efeefd;
+  --input-border-focus: #0F4C75;
+  --input-shadow-focus: #3282b822;
+  --input-text: #22304a;
+  --input-toggle-bg: #ccc;
+  --input-toggle-checked: #b3dbbe;
+  --input-toggle-hover: #b3b3b3;
+  --input-toggle-icon: #0F4C75;
+  --input-toggle-icon-hover: #0F4C75;
+  --input-toggle-knob: #fff;
+  --inputcolor: #5e96bb;
+  --inputshadow: rgba(50,130,184,0.04); // ← 追加・修正
+  --main-bg: #e3f1fb;
+  --main-color: #22304a;
+  --memoinput-border: #3282B8;
+  --task-bg: #68afdf;
+  --task-done-color: #727272;
+}
+
+// テーマB
+.themeB {
+  --accent: #FFC7C7;
+  --addbtn-shadow: rgba(50,130,184,0.06);
+  --btn-active: #393e46;
+  --btn-bg: #8785A2;
+  --btn-hover: #acabab;
+  --btn-shadow: #a7a096;
+  --btn-text: #fff;
+  --delete-icon-color: #fd8578;
+  --delete-icon-hover: #b71c1c;
+  --done-icon-color: #8fc791;
+  --input-background-focus: #FFE2E2;
+  --input-bg: #f8e4ea;
+  --input-border-focus: #ff9800;
+  --input-shadow-focus: #fd5acc22;
+  --input-text: #8785A2;
+  --input-toggle-bg: #ccc;
+  --input-toggle-checked: #b3dbb5;
+  --input-toggle-hover: #b3b3b3;
+  --input-toggle-icon: #ff9800;
+  --input-toggle-icon-hover: #ff9800;
+  --input-toggle-knob: #fff;
+  --inputcolor: #FFC7C7;
+  --inputshadow: rgba(50,130,184,0.04); // ← 追加・修正（テーマB用に色を変えてもOK）
+  --main-bg: #F6F6F6;
+  --main-color: #8785A2;
+  --memoinput-border: #FFC7C7;
+  --task-bg: #FFE2E2;
+  --task-done-color: #727272;
+}
+
+// 以降、色指定をすべて変数で統一
+
+.categoryInput,
+.memoInput {
+  color: var(--input-text);
+}
+
+.memoInput {
+  box-shadow: 0 1px 4px var(--inputshadow);
+  &:focus {
+    border: 1.5px solid var(--input-border-focus);
+    box-shadow: 0 0 0 2px var(--input-shadow-focus);
+    background: var(--input-background-focus);
+  }
+}
+
+.inputToggleIcon {
+  color: var(--input-toggle-icon);
+  &:hover,
+  &:focus {
+    color: var(--input-toggle-icon-hover);
+  }
+}
+
+.categoryAddBtn,
+.addBtn {
+  color: var(--btn-text);
+  box-shadow: 0 1px 4px var(--addbtn-shadow);
+  &:hover,
+  &:focus {
+    background: var(--btn-hover);
+  }
+  &:active {
+    background: var(--btn-active);
+  }
+}
+
+// html, body もテーマ変数を使う
+html {
+  background: var(--main-bg);
+  color: var(--main-color);
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  body {
+    margin: 3rem;  
+    background: var(--main-bg);
+    color: var(--main-color);
+  }
+}
+
+// 以降、$color-dark などのSass変数の代わりに
+// var(--main-bg), var(--main-color), var(--accent), var(--btn-bg), var(--btn-hover), var(--input-bg)
+// を使ってください
+
+.container {
+  background-color: var(--main-bg);
+  color: var(--main-color);
+  display: flex;
+  flex-direction: column;
+  max-width: 100rem;
+  width: 100%;
+
+  .header {}
+
+  .headerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-family: 'Ink Free', cursive, sans-serif;
+    font-weight: 600;
+  }
+
+  .title {
+    font-weight: 800;
+    font-size: 2.5rem;
+    font-family: 'Ink Free', cursive, sans-serif;
+  }
+
+.deleteBtn {
+  display: flex;
+  justify-content: flex-end;
+
+  .deleteIcon {
+    cursor: pointer; // ← クリックできることを示す
+    transition: color 0.2s, transform 0.2s;
+
+    &:hover,
+    &:focus {
+      color: var(--delete-icon-hover); // 色変化
+      transform: scale(1.15); // 少し拡大
+      outline: none;
+    }
+  }
+}
+
+  .addCategory {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem; // 0.7rem → 0.3rem に変更して縦の間隔を狭く
+    min-height: 32px; // 必要なら高さも調整
+  }
+
+  .category {
+    display: flex;
+
+    .sortableCategory {
+      background-color: var(--main-bg);
+      margin-right: 0.6rem;
+      border-radius: 5%;
+      border: 2px solid var(--accent); // ← border-colorだけでなくborder幅も指定
+
+      .categoryHandle {
+        background-color: var(--accent); // ← ここを修正
+        border-top-left-radius: 9px;
+        border-top-right-radius: 9px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 0.5em 1em;
+
+        span {
+          margin-right: 1.5em;
+        }
+      }
+
+      .categoryContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; // 2rem → 1rem でカテゴリ内の縦間隔を狭く
+        width: 320px;
+        min-width: 0;
+        background-color: var(--main-bg);
+        max-width: 100rem;
+        border-radius: 5%;
+
+        .deleteBtn {
+          display: flex;
+          justify-content: flex-end;
+          font-weight: 500;
+          color: var(--delete-icon-color);
+          margin-right:0.5rem;
+        }
+
+        .taskItem {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          opacity: 1;
+          background: var(--task-bg);
+          margin-bottom: 2px; // 4px → 2px でタスク同士の間隔を狭く
+          margin-left: 0.5rem;
+          padding: 6px;       // 8px → 6px でタスクの上下余白も狭く
+          border-radius: 4px;
+          width: 19rem;
+          height: 40px;       // 48px → 40px でタスク自体も低く
+          box-sizing: border-box;
+          transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+
+          &.dragging {
+            // opacity: 0.7;
+          }
+
+          .done {
+            text-decoration: line-through;
+            color: var(--task-done-color);
+            transition: background 1s, color 1s;
+          }
+
+          .grab {
+            cursor: grab;
+          }
+
+          .taskIcons {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            flex-shrink: 0;
+            margin-left: 0.7rem;
+          }
+
+          .doneIcon {
+            display: inline-block;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--done-icon-color);
+            cursor: pointer;
+            user-select: none;
+            margin-right: 0.3rem;
+            transition: color 0.2s, transform 0.2s;
+
+            &:hover,
+            &:focus {
+              color: var(--done-icon-hover);
+              transform: scale(1.15);
+              outline: none;
+            }
+          }
+
+          .deleteIcon {
+            display: inline-block;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--delete-icon-color);
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s, transform 0.2s;
+
+            &:hover,
+            &:focus {
+              color: var(--delete-icon-hover);
+              transform: scale(1.15);
+              outline: none;
+            }
+          }
+
+          span > .doneIcon,
+          span > .deleteIcon {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+          }
+
+          &:hover span > .doneIcon,
+          &:hover span > .deleteIcon,
+          &:focus-within span > .doneIcon,
+          &:focus-within span > .deleteIcon {
+            opacity: 1;
+            pointer-events: auto;
+          }
+
+          .taskText {
+            flex: 1 1 0;
+            min-width: 0;
+            overflow: auto;
+            word-break: break-all;
+          }
+        }
+      }
+    }
+  }
+
+  .displayFlex {
+    display: flex;
+  }
+
+  .inputBtnContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem; // 必要ならgapを追加・調整
+
+    .inputBtn {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .categoryInput {
+    width: 100%;
+    width: 11rem;
+    height: 1.5rem;
+    margin-left: 0.7rem;
+    font-size: 1rem;
+    font-family: inherit;
+    background: var(--input-bg);
+    border: 1.5px solid var(--inputcolor);
+    border-radius: 7px;
+    box-shadow: 0 1px 4px var(--inputshadow);
+    outline: none;
+    box-shadow: 0 1px 4px var(--inputshadow);
+    transition: border 0.2s, box-shadow 0.2s;
+
+    &:focus {
+      border: 1.5px solid var(--input-border-focus);
+      box-shadow: 0 0 0 2px var(--input-shadow-focus);
+      background: var(--input-background-focus);
+    }
+
+  }
+
+  .toggleContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-height: 2rem; // 2.5rem → 2rem でTheme Colorの縦幅も狭く
+  }
+
+  .toggleSwitch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+
+    input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--input-toggle-bg); // ← 変数化
+      border-radius: 22px;
+      transition: .4s;
+
+      &:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 2px;
+        bottom: 2px;
+        background-color: var(--input-toggle-knob); // ← 変数化
+        border-radius: 50%;
+        transition: .4s;
+      }
+    }
+
+    input:checked + .slider {
+      background-color: var(--input-toggle-checked); // ← 変数化
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(18px);
+    }
+  }
+
+  .categoryInputStyle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px; // 48px → 32px で入力欄の高さを狭く
+  }
+  .changeCategory {
+    display: flex;
+    width: 300px;
+  }
+
+  .inputToggleIcon {
+    display: inline-block;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #0F4C75;
+    cursor: pointer;
+    user-select: none;
+    margin-left: 0.5rem;
+    transition: color 0.2s, transform 0.2s;
+
+    &:hover,
+    &:focus {
+      color: #0F4C75;
+      transform: scale(1.15);
+      outline: none;
+    }
+  }
+  .memoInputStyle{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .memoInput {
+    width: 100%;
+    width: 12rem;
+    height: 1rem;
+    padding: 0.5em 1em;
+    margin-left: 0.7rem;
+    margin-bottom: 0.7rem;
+    font-size: 1rem;
+    font-family: inherit;
+    background: var(--input-bg);
+    border: 1.5px solid var(--memoinput-border);
+    border-radius: 7px;
+    box-shadow: 0 1px 4px rgba(50,130,184,0.04);
+    outline: none;
+    box-shadow: 0 1px 4px var(--inputshadow);
+    transition: border 0.2s, box-shadow 0.2s;
+
+   &:focus {
+    border: 1.5px solid var(--input-border-focus);
+    box-shadow: 0 0 0 2px var(--input-shadow-focus);
+    background: var(--input-background-focus);
+   }
+  }
+  .categoryAddBtn {
+    height: 1.7rem;
+    background: var(--btn-bg);
+    color: var(--btn-text); // ← #fff → 変数
+    border: none;
+    border-radius: 6px;
+    padding: 0.3em 0.3rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 4px var(--btn-shadow);
+    margin-left: 0.5rem;
+
+    &:hover,
+    &:focus {
+      background: var(--btn-hover); // ← #0F4C75 → 変数
+      outline: none;
+    }
+
+    &:active {
+      background: var(--btn-active);
+    }
+  }
+
+  .addBtn {
+    padding-bottom: 1rem;
+    height: 2.2rem;
+    background: var(--btn-bg);
+    color: var(--btn-text); // ← #fff → 変数
+    border: none;
+    border-radius: 6px;
+    padding: 0.5em 1em;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 4px var(--addbtn-shadow);
+    margin-left: 0.5rem;
+    margin-bottom: 0.7rem;
+
+    &:hover,
+    &:focus {
+      background: var(--btn-hover); // ← #0F4C75 → 変数
+      outline: none;
+    }
+
+    &:active {
+      background: var(--btn-active);
+    }
+  }
+}
