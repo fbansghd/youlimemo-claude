@@ -175,7 +175,7 @@ html {
       background-color: var(--main-bg);
       margin-right: 0.6rem;
       border-radius: 5%;
-      border: 1.5px solid var(--accent); // ← border-colorだけでなくborder幅も指定
+      border: 3px solid var(--accent); // ← border-colorだけでなくborder幅も指定
 
       .categoryHandle {
         background-color: var(--accent); // ← ここを修正
