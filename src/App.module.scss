@@ -179,8 +179,8 @@ html {
 
       .categoryHandle {
         background-color: var(--accent); // ← ここを修正
-        border-top-left-radius: 9px;
-        border-top-right-radius: 9px;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
         display: flex;
         justify-content: flex-start;
         align-items: center;
