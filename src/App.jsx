@@ -1,4 +1,4 @@
-import { DndContext, DragOverlay, closestCenter } from "@dnd-kit/core";
+import { DndContext, DragOverlay, pointerWithin } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
 import styles from "./App.module.scss";
@@ -122,7 +122,7 @@ function App() {
         {/* メイン */}
         <div className={styles.category}>
           <DndContext
-            collisionDetection={closestCenter}
+            collisionDetection={pointerWithin}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
             onDragCancel={handleDragCancel}
