@@ -175,16 +175,19 @@ function App() {
                           items={categoryItem.tasks.map(task => task.id)}
                           strategy={verticalListSortingStrategy}
                         >
-                          {categoryItem.tasks.map((taskItem, taskIndex) => (
-                            <SortableTask
-                              key={taskItem.id}
-                              id={taskItem.id}
-                              text={taskItem.text}
-                              done={taskItem.done}
-                              onToggle={() => toogleTaskDone(categoryIndex, taskItem.id)}
-                              onDelete={() => deleteTask(categoryIndex, taskItem.id)}
-                            />
-                          ))}
+                          {categoryItem.tasks
+                            .slice() // 配列をコピー
+                            .sort((a, b) => a.done - b.done) // 未完了が上、完了が下
+                            .map((taskItem, taskIndex) => (
+                              <SortableTask
+                                key={taskItem.id}
+                                id={taskItem.id}
+                                text={taskItem.text}
+                                done={taskItem.done}
+                                onToggle={() => toogleTaskDone(categoryIndex, taskItem.id)}
+                                onDelete={() => deleteTask(categoryIndex, taskItem.id)}
+                              />
+                            ))}
                         </SortableContext>
                         <div className={styles.inputBtnContainer}>
                           <div className={styles.inputBtn}>
@@ -243,15 +246,29 @@ function App() {
                   onToggle={() => {}}
                   onDelete={() => {}}
                   isOverlay={true}
-                  // transform={activeTask.transform} ←DnD Kitからtransformを取得して渡す
                 />
               ) : activeCategory ? (
                 <SortableCategory
                   id={activeCategory.id}
                   label={activeCategory.label}
                   isOverlay={true}
-                  // transform={activeCategory.transform} ←DnD Kitからtransformを取得して渡す
-                />
+                >
+                  <div
+                    className={`${styles.categoryContainer} ${styles.categoryContainerOverlay}`}
+                  >
+                    {activeCategory.tasks?.map((taskItem) => (
+                      <SortableTask
+                        key={taskItem.id}
+                        id={taskItem.id}
+                        text={taskItem.text}
+                        done={taskItem.done}
+                        onToggle={() => {}}
+                        onDelete={() => {}}
+                        isParentOverlay={true}
+                      />
+                    ))}
+                  </div>
+                </SortableCategory>
               ) : null}
             </DragOverlay>
           </DndContext>

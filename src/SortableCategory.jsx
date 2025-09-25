@@ -11,12 +11,12 @@ function SortableCategory({ id, label, children, isOverlay, transform: overlayTr
     <motion.div
       ref={setNodeRef}
       layout
-      initial={isOverlay ? { opacity: 1, scale: 0.98, y: 10 } : false}
+      initial={isOverlay ? { opacity: 1, scale: 1, y: 10 } : false}
       animate={
         isOverlay
           ? {
               opacity: 1,
-              scale: 1.07,
+              scale: 1.0,
               y: 0,
               boxShadow: "0 8px 24px #3282B888, 0 0 0 2px #3282B8",
               background: "var(--category-bg)",
@@ -48,8 +48,9 @@ function SortableCategory({ id, label, children, isOverlay, transform: overlayTr
     >
       <div
         className={styles.categoryHandle}
-        style={{ cursor: "grab", fontWeight: "bold", userSelect: "none" }}
-        {...listeners}
+        {...listeners} // ←ここだけにリスナーを渡す
+        {...attributes}
+        style={{ cursor: "grab", userSelect: "none" }}
       >
         {label}
       </div>

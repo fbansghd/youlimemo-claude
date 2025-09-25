@@ -210,7 +210,7 @@ html {
       .categoryContainer {
         display: flex;
         flex-direction: column;
-        gap: 1rem; // 2rem → 1rem でカテゴリ内の縦間隔を狭く
+        gap: 0.5rem; // ← ここで通常の間隔を指定
         width: 320px;
         min-width: 0;
         background-color: var(--main-bg);
@@ -231,7 +231,7 @@ html {
           justify-content: space-between;
           align-items: flex-start; // ← ここをflex-startに
           background: var(--task-bg);
-          margin-bottom: 2px;
+          margin-bottom: 2px; // 通常の間隔
           margin-left: 0.5rem;
           padding: 6px;
           border-radius: 4px;
@@ -579,4 +579,25 @@ html {
 
 .body {
   display: flex;
+}
+
+.isParentOverlay{
+  background: #fffbe6;
+  opacity: 0.8;  
+  margin-bottom: 2px !important;
+  padding: 0 !important;  
+}
+
+.categoryContainerOverlay {
+  margin-bottom: 1px !important;
+  margin-top: 2px !important;
+  padding: 0 !important;
+  transform: scaleX(0.93) scaleY(0.90);
+  border-radius: 1px !important;
+  background: var(--category-bg) !important;
+
+  .taskItem {
+    margin-bottom: 2px !important; // overlay時も通常時と同じ値に固定
+    padding: 0 !important;
+  }
 }

@@ -3,7 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { motion } from "framer-motion";
 import styles from "./App.module.scss";
 
-function SortableTask({ id, text, done, onToggle, onDelete, isOverlay }) {
+function SortableTask({ id, text, done, onToggle, onDelete, isOverlay, isParentOverlay  }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
 
   return (
@@ -12,12 +12,14 @@ function SortableTask({ id, text, done, onToggle, onDelete, isOverlay }) {
       layout
       initial={
         isOverlay
-          ? { opacity: 1, scale: 0.98, y: 10 }
+          ? { opacity: 1, scale: 1, y: 10 }
           : false
       }
       animate={
         isOverlay
-          ? { opacity: 1, scale: 1.1, y: 0, boxShadow: "0 8px 24px #3282B888, 0 0 0 2px #3282B8",background: "#68afdf", }
+          ? isParentOverlay 
+            ? { opacity: 1, scale: 1, y: 0, boxShadow: "none", background: "#b89d19ff" } 
+            : { opacity: 1, scale: 1, y: 0, boxShadow: "0 8px 24px #3282B888, 0 0 0 2px #3282B8", background: "#68afdf" }
           : { opacity: 1, scale: 1, y: 0, boxShadow: "none" }
       }
       exit={
@@ -26,7 +28,7 @@ function SortableTask({ id, text, done, onToggle, onDelete, isOverlay }) {
           : { opacity: 1, scale: 1, y: 0 }
       }
       transition={{ duration: 0.18 }}
-      className={`${styles.taskItem} ${done ? styles.done : ""} ${isDragging ? styles.dragging : ""}`}
+      className={`${styles.taskItem} ${done ? styles.done : ""} ${isDragging ? styles.dragging : ""} ${isParentOverlay ? styles.isParentOverlay : ""}`}
       style={{
         minHeight: isOverlay ? 40 : 40, // ← ここで直接指定
         borderRadius: isOverlay ? "4px" : "4px", 

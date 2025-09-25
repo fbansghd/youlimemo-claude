@@ -89,7 +89,11 @@ export function useMemos() {
     // カテゴリ
     const category = memos.find(cat => cat.id === active.id);
     if (category) {
-      setActiveCategory({ id: category.id, label: category.category });
+      setActiveCategory({
+        id: category.id,
+        label: category.category,
+        tasks: category.tasks, // ← ここを追加
+      });
     } else {
       setActiveCategory(null);
     }
