@@ -33,48 +33,49 @@ export function useMemos() {
     setTaskInputs([...taskInputs, ""]);
   };
 
+  const sortTasks = (tasks) => {
+    return tasks.slice().sort((a, b) => a.done - b.done);
+  };
+
+  // タスク追加
   const addTaskToCategory = (catIdx, task) => {
     if (!task) return;
-    setMemos(memos =>
-      memos.map((memo, i) =>
-        i === catIdx
-          ? { ...memo, tasks: [...memo.tasks, { id: uuidv4(), text: task, done: false }] }
-          : memo
-      )
-    );
+    setMemos((prev) => {
+      const newMemos = [...prev];
+      const tasks = [...newMemos[catIdx].tasks, { id: uuidv4(), text: task, done: false }];
+      newMemos[catIdx].tasks = sortTasks(tasks);
+      return newMemos;
+    });
     const newInputs = [...taskInputs];
     newInputs[catIdx] = "";
     setTaskInputs(newInputs);
   };
 
+  // タスク完了切り替え
   const toogleTaskDone = (catIdx, taskId) => {
-    setMemos(memos =>
-      memos.map((memo, i) =>
-        i === catIdx
-          ? {
-              ...memo,
-              tasks: memo.tasks.map((task) =>
-                task.id === taskId ? { ...task, done: !task.done } : task
-              ),
-            }
-          : memo
-      )
-    );
+    setMemos((prev) => {
+      const newMemos = [...prev];
+      const tasks = newMemos[catIdx].tasks.map((task) =>
+        task.id === taskId ? { ...task, done: !task.done } : task
+      );
+      newMemos[catIdx].tasks = sortTasks(tasks);
+      return newMemos;
+    });
   };
 
+  // タスク削除
   const deleteTask = (catIdx, taskId) => {
-    setMemos(memos =>
-      memos.map((memo, i) =>
-        i === catIdx
-          ? { ...memo, tasks: memo.tasks.filter((task) => task.id !== taskId) }
-          : memo
-      )
-    );
+    setMemos((prev) => {
+      const newMemos = [...prev];
+      const tasks = newMemos[catIdx].tasks.filter((task) => task.id !== taskId);
+      newMemos[catIdx].tasks = sortTasks(tasks);
+      return newMemos;
+    });
   };
 
   const deleteMemo = (catIdx) => {
-    setMemos(memos => memos.filter((_, i) => i !== catIdx));
-    setTaskInputs(inputs => inputs.filter((_, i) => i !== catIdx));
+    setMemos((memos) => memos.filter((_, i) => i !== catIdx));
+    setTaskInputs((inputs) => inputs.filter((_, i) => i !== catIdx));
   };
 
   // DnD Kit用
@@ -82,12 +83,12 @@ export function useMemos() {
     const { active } = event;
     // タスク
     const task = memos
-      .flatMap(cat => cat.tasks)
-      .find(task => task.id === active.id);
+      .flatMap((cat) => cat.tasks)
+      .find((task) => task.id === active.id);
     setActiveTask(task);
 
     // カテゴリ
-    const category = memos.find(cat => cat.id === active.id);
+    const category = memos.find((cat) => cat.id === active.id);
     if (category) {
       setActiveCategory({
         id: category.id,
@@ -107,8 +108,8 @@ export function useMemos() {
       return;
     }
 
-    const activeCategoryIndex = memos.findIndex(cat => cat.id === active.id);
-    const overCategoryIndex = memos.findIndex(cat => cat.id === over.id);
+    const activeCategoryIndex = memos.findIndex((cat) => cat.id === active.id);
+    const overCategoryIndex = memos.findIndex((cat) => cat.id === over.id);
     if (activeCategoryIndex !== -1 && overCategoryIndex !== -1) {
       const newMemos = arrayMove(memos, activeCategoryIndex, overCategoryIndex);
       setMemos(newMemos);
@@ -117,23 +118,23 @@ export function useMemos() {
       return;
     }
 
-    const fromCategoryIndex = memos.findIndex(cat =>
-      cat.tasks.some(task => task.id === active.id)
+    const fromCategoryIndex = memos.findIndex((cat) =>
+      cat.tasks.some((task) => task.id === active.id)
     );
     if (fromCategoryIndex === -1) {
       setTimeout(() => setActiveTask(null), 0);
       return;
     }
 
-    let toCategoryIndex = memos.findIndex(cat =>
-      cat.tasks.some(task => task.id === over.id)
+    let toCategoryIndex = memos.findIndex((cat) =>
+      cat.tasks.some((task) => task.id === over.id)
     );
     let overIndex = -1;
 
     if (toCategoryIndex !== -1) {
-      overIndex = memos[toCategoryIndex].tasks.findIndex(t => t.id === over.id);
+      overIndex = memos[toCategoryIndex].tasks.findIndex((t) => t.id === over.id);
     } else {
-      toCategoryIndex = memos.findIndex(cat => cat.id === over.id);
+      toCategoryIndex = memos.findIndex((cat) => cat.id === over.id);
       overIndex = memos[toCategoryIndex]?.tasks.length ?? -1;
       if (toCategoryIndex === -1) {
         setTimeout(() => setActiveTask(null), 0);
@@ -142,7 +143,7 @@ export function useMemos() {
     }
 
     if (fromCategoryIndex === toCategoryIndex) {
-      const oldIndex = memos[fromCategoryIndex].tasks.findIndex(t => t.id === active.id);
+      const oldIndex = memos[fromCategoryIndex].tasks.findIndex((t) => t.id === active.id);
       const newIndex = overIndex;
       const newMemos = [...memos];
       newMemos[fromCategoryIndex] = {
@@ -155,12 +156,12 @@ export function useMemos() {
       return;
     }
 
-    const task = memos[fromCategoryIndex].tasks.find(task => task.id === active.id);
+    const task = memos[fromCategoryIndex].tasks.find((task) => task.id === active.id);
     if (!task) {
       setActiveTask(null);
       return;
     }
-    const newFromTasks = memos[fromCategoryIndex].tasks.filter(t => t.id !== active.id);
+    const newFromTasks = memos[fromCategoryIndex].tasks.filter((t) => t.id !== active.id);
     const newToTasks = [
       ...memos[toCategoryIndex].tasks.slice(0, overIndex),
       task,
@@ -210,17 +211,20 @@ export function useMemos() {
   // カテゴリの折りたたみ状態
   const [collapsedCategories, setCollapsedCategories] = useState([]);
   const toggleCategoryCollapse = (categoryId) => {
-    setCollapsedCategories(prev =>
+    setCollapsedCategories((prev) =>
       prev.includes(categoryId)
-        ? prev.filter(id => id !== categoryId)
+        ? prev.filter((id) => id !== categoryId)
         : [...prev, categoryId]
     );
   };
 
   return {
-    text, setText,
-    taskInputs, setTaskInputs,
-    memos, setMemos,
+    text,
+    setText,
+    taskInputs,
+    setTaskInputs,
+    memos,
+    setMemos,
     addCategory,
     addTaskToCategory,
     toogleTaskDone,
