@@ -3,7 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { motion } from "framer-motion";
 import styles from "./App.module.scss";
 
-function SortableCategory({ id, label, children, isOverlay, transform: overlayTransform }) {
+function SortableCategory({ id, label, children, isOverlay, transform: overlayTransform, onDelete, onCollapse }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
   const appliedTransform = isOverlay ? overlayTransform : transform;
 
@@ -41,18 +41,57 @@ function SortableCategory({ id, label, children, isOverlay, transform: overlayTr
         pointerEvents: isOverlay ? "none" : undefined,
         borderRadius: isOverlay ? "18px" : "18px",
         border: isOverlay
-      ? "3px solid var(--category-border-overlay)" // オーバーレイ時のボーダー
-      : "3px solid var(--category-border)",   // 通常時のボーダー
+          ? "3px solid var(--category-border-overlay)"
+          : "3px solid var(--category-border)",
       }}
       {...attributes}
     >
       <div
         className={styles.categoryHandle}
-        {...listeners} // ←ここだけにリスナーを渡す
-        {...attributes}
-        style={{ cursor: "grab", userSelect: "none" }}
+        style={{
+          cursor: "grab",
+          userSelect: "none",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        {label}
+        {/* ドラッグ領域をラベル＋その右の余白まで広げる */}
+        <span
+          {...listeners}
+          {...attributes}
+          style={{
+            flex: 1,
+            minWidth: 0,
+            paddingRight: "2.5em", // ← ボタン分の余白を右側に追加
+            cursor: "grab",
+            display: "block",
+          }}
+        >
+          {label}
+        </span>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <span
+            className={styles.collapseBtn}
+            tabIndex={0}
+            role="button"
+            aria-label="カテゴリをたたむ"
+            style={{ marginRight: "0.5em", cursor: "pointer", fontSize: "1.1rem" }}
+            onClick={onCollapse}
+          >
+            ー
+          </span>
+          <span
+            className={styles.deleteIcon}
+            onClick={onDelete}
+            tabIndex={0}
+            role="button"
+            aria-label="カテゴリ削除"
+            style={{ marginLeft: "0", cursor: "pointer", fontSize: "1.3rem" }}
+          >
+            ｘ
+          </span>
+        </div>
       </div>
       {children}
     </motion.div>

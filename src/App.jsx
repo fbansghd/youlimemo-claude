@@ -196,40 +196,15 @@ function App() {
                         key={categoryItem.id}
                         id={categoryItem.id}
                         label={categoryItem.category}
+                        onDelete={() => {
+                          if (window.confirm("本当にこのカテゴリを削除しますか？")) {
+                            deleteMemo(categoryIndex);
+                          }
+                        }}
+                        onCollapse={() => toggleCategoryCollapse(categoryItem.id)} // ← 追加
                       >
                         <div className={styles.categoryContainer}>
                           <div>
-                            <div className={styles.deleteBtn}>
-                              {/* 閉じるボタン */}
-                              <span
-                                className={styles.collapseBtn}
-                                onClick={() => toggleCategoryCollapse(categoryItem.id)}
-                                tabIndex={0}
-                                role="button"
-                                aria-label="カテゴリをたたむ"
-                              >
-                                ー
-                              </span>
-                              {/* xボタン */}
-                              <span
-                                className={styles.deleteIcon}
-                                onClick={() => {
-                                  if (window.confirm("本当にこのカテゴリを削除しますか？")) {
-                                    deleteMemo(categoryIndex);
-                                  }
-                                }}
-                                tabIndex={0}
-                                role="button"
-                                aria-label="カテゴリ削除"
-                                onKeyDown={e =>
-                                  (e.key === "Enter" || e.key === " ") &&
-                                  window.confirm("本当にこのカテゴリを削除しますか？") &&
-                                  deleteMemo(categoryIndex)
-                                }
-                              >
-                                ｘ
-                              </span>
-                            </div>
                             <SortableContext
                               items={categoryItem.tasks.map(task => task.id)}
                               strategy={verticalListSortingStrategy}
