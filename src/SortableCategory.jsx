@@ -54,29 +54,38 @@ function SortableCategory({ id, label, children, isOverlay, transform: overlayTr
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          position: "relative", // ← 追加
         }}
       >
-        {/* ドラッグ領域をラベル＋その右の余白まで広げる */}
+        {/* ドラッグ領域 */}
         <span
           {...listeners}
           {...attributes}
           style={{
             flex: 1,
             minWidth: 0,
-            paddingRight: "2.5em", // ← ボタン分の余白を右側に追加
+            paddingRight: "2.5em",
             cursor: "grab",
             display: "block",
+            zIndex: 2, // ← 追加
+            pointerEvents: "auto", // ← 追加
           }}
         >
           {label}
         </span>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", zIndex: 3 }}>
           <span
             className={styles.collapseBtn}
             tabIndex={0}
             role="button"
             aria-label="カテゴリをたたむ"
-            style={{ marginRight: "0.5em", cursor: "pointer", fontSize: "1.1rem" }}
+            style={{
+              marginRight: "0.5em",
+              cursor: "pointer",
+              fontSize: "1.1rem",
+              zIndex: 3, // ← 追加
+              pointerEvents: "auto", // ← 追加
+            }}
             onClick={onCollapse}
           >
             ー
@@ -87,7 +96,13 @@ function SortableCategory({ id, label, children, isOverlay, transform: overlayTr
             tabIndex={0}
             role="button"
             aria-label="カテゴリ削除"
-            style={{ marginLeft: "0", cursor: "pointer", fontSize: "1.3rem" }}
+            style={{
+              marginLeft: "0",
+              cursor: "pointer",
+              fontSize: "1.3rem",
+              zIndex: 3, // ← 追加
+              pointerEvents: "auto", // ← 追加
+            }}
           >
             ｘ
           </span>
