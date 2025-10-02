@@ -13,6 +13,59 @@ export function useMemos() {
   const [activeTask, setActiveTask] = useState(null);
   const [activeCategory, setActiveCategory] = useState(null);
 
+  // サイドバー表示
+  const [showSidebar, setShowSidebar] = useState(false);
+
+  // モバイル判定
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 600);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // モバイル用カテゴリー切り替え（閉じているカテゴリーはスキップ）
+  const [mobileCategoryIndex, setMobileCategoryIndex] = useState(0);
+
+  // カテゴリー折りたたみ状態
+  const [collapsedCategories, setCollapsedCategories] = useState(() => {
+    const saved = localStorage.getItem("collapsedCategories");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("collapsedCategories", JSON.stringify(collapsedCategories));
+  }, [collapsedCategories]);
+
+  const toggleCategoryCollapse = (categoryId) => {
+    setCollapsedCategories(prev =>
+      prev.includes(categoryId)
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
+
+  const getOpenCategoryIndexes = () =>
+    memos
+      .map((cat, idx) => (!collapsedCategories.includes(cat.id) ? idx : null))
+      .filter(idx => idx !== null);
+
+  const handlePrevCategory = () => {
+    const openIndexes = getOpenCategoryIndexes();
+    if (openIndexes.length === 0) return;
+    const currentIdx = openIndexes.indexOf(mobileCategoryIndex);
+    const prevIdx = (currentIdx - 1 + openIndexes.length) % openIndexes.length;
+    setMobileCategoryIndex(openIndexes[prevIdx]);
+  };
+
+  const handleNextCategory = () => {
+    const openIndexes = getOpenCategoryIndexes();
+    if (openIndexes.length === 0) return;
+    const currentIdx = openIndexes.indexOf(mobileCategoryIndex);
+    const nextIdx = (currentIdx + 1) % openIndexes.length;
+    setMobileCategoryIndex(openIndexes[nextIdx]);
+  };
+
   // localStorageから復元
   useEffect(() => {
     const saved = localStorage.getItem("memos");
@@ -93,7 +146,7 @@ export function useMemos() {
       setActiveCategory({
         id: category.id,
         label: category.category,
-        tasks: category.tasks, // ← ここを追加
+        tasks: category.tasks,
       });
     } else {
       setActiveCategory(null);
@@ -196,9 +249,6 @@ export function useMemos() {
     }));
   };
 
-  // カテゴリ追加input表示状態
-  const [showCategoryInput, setShowCategoryInput] = useState(false);
-
   // カラートグル（ローカル保存付き）
   const [isAltColor, setIsAltColor] = useState(() => {
     const saved = localStorage.getItem("isAltColor");
@@ -207,16 +257,6 @@ export function useMemos() {
   useEffect(() => {
     localStorage.setItem("isAltColor", JSON.stringify(isAltColor));
   }, [isAltColor]);
-
-  // カテゴリの折りたたみ状態
-  const [collapsedCategories, setCollapsedCategories] = useState([]);
-  const toggleCategoryCollapse = (categoryId) => {
-    setCollapsedCategories((prev) =>
-      prev.includes(categoryId)
-        ? prev.filter((id) => id !== categoryId)
-        : [...prev, categoryId]
-    );
-  };
 
   return {
     text,
@@ -233,8 +273,6 @@ export function useMemos() {
     showTaskInput,
     setShowTaskInput,
     toggleTaskInput,
-    showCategoryInput,
-    setShowCategoryInput,
     isAltColor,
     setIsAltColor,
     activeTask,
@@ -245,6 +283,16 @@ export function useMemos() {
     handleDragEnd,
     handleDragCancel,
     collapsedCategories,
+    setCollapsedCategories,
     toggleCategoryCollapse,
+    showSidebar,
+    setShowSidebar,
+    isMobile,
+    setIsMobile,
+    mobileCategoryIndex,
+    setMobileCategoryIndex,
+    getOpenCategoryIndexes,
+    handlePrevCategory,
+    handleNextCategory,
   };
 }

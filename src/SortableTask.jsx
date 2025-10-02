@@ -19,7 +19,7 @@ function SortableTask({ id, text, done, onToggle, onDelete, isOverlay, isParentO
         isOverlay
           ? isParentOverlay 
             ? { opacity: 1, scale: 1, y: 0, boxShadow: "none", background: "#b89d19ff" } 
-            : { opacity: 1, scale: 1, y: 0, boxShadow: "0 8px 24px #3282B888, 0 0 0 2px #3282B8", background: "#68afdf" }
+            : { opacity: 1, scale: 1, y: 0, boxShadow: "0 8px 24px var(--category-border), 0 0 0 2px var(--category-border)", background: "var(--task-bg)" }
           : { opacity: 1, scale: 1, y: 0, boxShadow: "none" }
       }
       exit={

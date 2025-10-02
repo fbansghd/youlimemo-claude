@@ -7,7 +7,7 @@
   --btn-hover: #0F4C75;
   --btn-shadow: #0F4C75;
   --btn-text: #fff;
-  --delete-icon-color: #f87a6c;
+  --delete-icon-color: #f0b471;
   --delete-icon-hover: #b71c1c;
   --done-icon-color: #97d89a;
   --input-background-focus: #BBE1FA;
@@ -33,6 +33,7 @@
   --category-border: #2b5674ff;
   --category-border-overlay: #2b5674ff;
   --category-bg: #ddd9a4 ;
+  --collaspe-btn:#0F4C75;
 }
 
 // テーマB
@@ -69,6 +70,7 @@
   --category-border: #b3a6a6;
   --category-border-overlay: #b3a6a6;
   --category-bg: #fcf0ca ;
+   --collaspe-btn:#393e465;
 }
 
 // html, body
@@ -170,6 +172,7 @@ html {
           margin-right: 0.7em;
           cursor: pointer;
           font-size: 1.3rem;
+          color: var(--collaspe-btn);
         }
 
         .deleteIcon {
@@ -633,4 +636,8 @@ html {
   overflow: visible;
   display: flex;
   flex-direction: column;
+}
+
+.dragging{
+  
 }

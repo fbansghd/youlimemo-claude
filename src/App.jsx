@@ -1,10 +1,10 @@
 import { DndContext, DragOverlay, pointerWithin, TouchSensor, MouseSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { useEffect, useState } from "react";
 import styles from "./App.module.scss";
 import SortableTask from "./SortableTask";
 import { useMemos } from "./useMemos";
 import SortableCategory from "./SortableCategory";
+import React from "react";
 
 function App() {
   const {
@@ -27,72 +27,27 @@ function App() {
     handleDragStart,
     handleDragEnd,
     handleDragCancel,
+    collapsedCategories,
+    toggleCategoryCollapse,
+    showSidebar,
+    setShowSidebar,
+    isMobile,
+    mobileCategoryIndex,
+    handlePrevCategory,
+    handleNextCategory,
   } = useMemos();
 
-  const [showSidebar, setShowSidebar] = useState(false);
-
-  // モバイル判定
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 600);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // モバイル用カテゴリー切り替え（閉じているカテゴリーはスキップ）
-  const [mobileCategoryIndex, setMobileCategoryIndex] = useState(0);
-
-  const getOpenCategoryIndexes = () =>
-    memos
-      .map((cat, idx) => (!collapsedCategories.includes(cat.id) ? idx : null))
-      .filter(idx => idx !== null);
-
-  const handlePrevCategory = () => {
-    const openIndexes = getOpenCategoryIndexes();
-    if (openIndexes.length === 0) return;
-    const currentIdx = openIndexes.indexOf(mobileCategoryIndex);
-    const prevIdx = (currentIdx - 1 + openIndexes.length) % openIndexes.length;
-    setMobileCategoryIndex(openIndexes[prevIdx]);
-  };
-
-  const handleNextCategory = () => {
-    const openIndexes = getOpenCategoryIndexes();
-    if (openIndexes.length === 0) return;
-    const currentIdx = openIndexes.indexOf(mobileCategoryIndex);
-    const nextIdx = (currentIdx + 1) % openIndexes.length;
-    setMobileCategoryIndex(openIndexes[nextIdx]);
-  };
-
-
-  // カテゴリー折りたたみ状態をlocalStorageで保存・復元
-  const [collapsedCategories, setCollapsedCategories] = useState(() => {
-    const saved = localStorage.getItem("collapsedCategories");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // 保存
-  useEffect(() => {
-    localStorage.setItem("collapsedCategories", JSON.stringify(collapsedCategories));
-  }, [collapsedCategories]);
-
-  // 折りたたみトグル関数
-  const toggleCategoryCollapse = (categoryId) => {
-    setCollapsedCategories(prev =>
-      prev.includes(categoryId)
-        ? prev.filter(id => id !== categoryId)
-        : [...prev, categoryId]
-    );
-  };
-
-  useEffect(() => {
-    document.body.classList.remove(styles.themeA, styles.themeB);
-    document.body.classList.add(isAltColor ? styles.themeB : styles.themeA);
-  }, [isAltColor]);
-
+  // DnD Kit sensors
   const sensors = useSensors(
     useSensor(MouseSensor),
     useSensor(TouchSensor)
   );
+
+  // テーマ切り替え
+  React.useEffect(() => {
+    document.body.classList.remove(styles.themeA, styles.themeB);
+    document.body.classList.add(isAltColor ? styles.themeB : styles.themeA);
+  }, [isAltColor]);
 
   return (
     <div className={`${isAltColor ? styles.themeB : styles.themeA} ${styles.container}`}>
@@ -128,21 +83,21 @@ function App() {
         {/* サイドバー */}
         {showSidebar && (
           <div className={styles.sidebar}>
-              <div className={styles.categoryInputStyle}>
-                <input
-                  className={styles.categoryInput}
-                  placeholder="  input category here"
-                  value={text}
-                  onChange={e => setText(e.target.value)}
-                  onKeyDown={e => e.key === "Enter" && addCategory()}
-                />
-                <button
-                  className={styles.categoryAddBtn}
-                  onClick={addCategory}
-                >
-                  add
-                </button>
-              </div>            
+            <div className={styles.categoryInputStyle}>
+              <input
+                className={styles.categoryInput}
+                placeholder=" input category here"
+                value={text}
+                onChange={e => setText(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && addCategory()}
+              />
+              <button
+                className={styles.categoryAddBtn}
+                onClick={addCategory}
+              >
+                add
+              </button>
+            </div>
             {memos
               .filter(cat => collapsedCategories.includes(cat.id))
               .map(cat => (
@@ -160,7 +115,7 @@ function App() {
         {/* メイン */}
         <div className={styles.mainContainer}>
           {/* モバイル時だけカテゴリー切り替えボタン */}
-          {isMobile && memos.length > 1 && !showSidebar &&(
+          {isMobile && memos.length > 1 && !showSidebar && (
             <div className={styles.categorySwitchArrows}>
               <button
                 className={styles.categoryArrowBtn}
@@ -185,7 +140,6 @@ function App() {
               >
                 {memos
                   .filter((_, idx) =>
-                    // モバイル時は「サイドバーが開いていれば何も表示しない」
                     !isMobile
                       || (!showSidebar && idx === mobileCategoryIndex)
                       || (!showSidebar && !isMobile)
@@ -201,7 +155,7 @@ function App() {
                             deleteMemo(categoryIndex);
                           }
                         }}
-                        onCollapse={() => toggleCategoryCollapse(categoryItem.id)} // ← 追加
+                        onCollapse={() => toggleCategoryCollapse(categoryItem.id)}
                       >
                         <div className={styles.categoryContainer}>
                           <div>
@@ -210,9 +164,9 @@ function App() {
                               strategy={verticalListSortingStrategy}
                             >
                               {categoryItem.tasks
-                                .slice() // 配列をコピー
-                                .sort((a, b) => a.done - b.done) // 未完了が上、完了が下
-                                .map((taskItem, taskIndex) => (
+                                .slice()
+                                .sort((a, b) => a.done - b.done)
+                                .map((taskItem) => (
                                   <SortableTask
                                     key={taskItem.id}
                                     id={taskItem.id}
@@ -315,7 +269,7 @@ function App() {
               </DragOverlay>
             </DndContext>
           </div>
-                 {isMobile && memos.length > 1 && !showSidebar && (
+          {isMobile && memos.length > 1 && !showSidebar && (
             <div className={styles.categorySwitchArrows}>
               <button
                 className={styles.categoryArrowBtn}
@@ -325,9 +279,9 @@ function App() {
                 →
               </button>
             </div>
-          )}        
+          )}
         </div>
-        </div>
+      </div>
     </div>
   );
 }
