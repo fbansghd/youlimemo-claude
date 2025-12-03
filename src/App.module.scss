@@ -186,6 +186,8 @@ html {
   margin-bottom: 16px;
   min-height: 100px;
   height: auto;
+  width: 320px;
+  max-width: 320px;
   display: flex;
   flex-direction: column;
   border-radius: 18px;
@@ -229,6 +231,9 @@ html {
   display: block;
   z-index: 2;
   pointer-events: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .buttonGroup {
@@ -270,15 +275,16 @@ html {
 // オーバーレイ時のカテゴリコンテナ
 .categoryContainerOverlay {
   margin-bottom: 1px !important;
-  margin-top: 2px !important;
-  padding: 0 !important;
+  margin-top: -8px !important;
+  padding: 0 0 8px 0 !important;
   transform: scaleX(0.93) scaleY(0.90);
   border-radius: 1px !important;
   background: var(--category-bg) !important;
 
   .taskItem {
     margin-bottom: 2px !important;
-    padding: 0 !important;
+    margin-left: 0.5rem !important;
+    padding: 6px !important;
   }
 }
 
@@ -313,9 +319,6 @@ html {
     background: var(--task-bg);
   }
 
-  &.isParentOverlay {
-    background: #b89d19ff;
-  }
 
   &:hover,
   &:focus-within {
@@ -661,13 +664,6 @@ html {
 // ============================================
 // ユーティリティ
 // ============================================
-
-.isParentOverlay {
-  background: #fffbe6;
-  opacity: 0.8;
-  margin-bottom: 2px !important;
-  padding: 0 !important;
-}
 
 // ============================================
 // レスポンシブデザイン

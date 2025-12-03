@@ -1,6 +1,5 @@
 import { DndContext, DragOverlay, pointerWithin, TouchSensor, MouseSensor, useSensor, useSensors } from "@dnd-kit/core";
 import styles from "./App.module.scss";
-import React from "react";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import MobileNavigation from "./components/MobileNavigation";
@@ -122,7 +121,6 @@ function App() {
                           done={taskItem.done}
                           onToggle={() => {}}
                           onDelete={() => {}}
-                          isParentOverlay={true}
                         />
                       ))}
                     </div>

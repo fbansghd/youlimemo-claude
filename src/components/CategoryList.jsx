@@ -8,7 +8,6 @@ function CategoryList({
   categories,
   isMobile,
   mobileCategoryIndex,
-  isSidebarVisible,
   deleteCategory,
   toggleCategoryCollapse,
   toggleTaskDone,
