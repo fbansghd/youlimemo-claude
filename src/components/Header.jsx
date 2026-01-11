@@ -3,7 +3,7 @@ import styles from "../App.module.scss";
 function Header({ isAltColor, setIsAltColor, isSidebarVisible, setIsSidebarVisible }) {
   return (
     <div className={styles.header}>
-      <div className={styles.title}>Todo List</div>
+      <div className={styles.title}>SortNote</div>
       <div className={styles.headerContainer}>
         <div className={styles.toggleContainer}>
           <div>Theme Color</div>
