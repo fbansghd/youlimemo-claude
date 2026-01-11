@@ -9,7 +9,11 @@ function Sidebar({ text, setText, addCategory, categories, toggleCategoryCollaps
           placeholder=" input category here"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && addCategory()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.isComposing) {
+              addCategory();
+            }
+          }}
         />
         <button className={styles.categoryAddBtn} onClick={addCategory}>
           add

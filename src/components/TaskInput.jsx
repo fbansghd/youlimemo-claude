@@ -35,7 +35,7 @@ function TaskInput({
               placeholder="input task"
               value={taskInputs[currentIdx] || ""}
               onChange={(e) => onInputChange(currentIdx, e.target.value)}
-              onKeyDown={(e) => onKeyDown(currentIdx, e.key)}
+              onKeyDown={(e) => onKeyDown(currentIdx, e)}
             />
             <button className={styles.addBtn} onClick={() => onAddClick(currentIdx)}>
               add
